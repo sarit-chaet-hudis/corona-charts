@@ -1,7 +1,21 @@
 const CORSapi = "https://intense-mesa-62220.herokuapp.com/";
-const countryCodes = {
-  Afganistan: "AF",
-};
+
+document
+  .getElementById("Asia")
+  .addEventListener("click", () => getCountriesByRegion("Asia"));
+document
+  .getElementById("Europe")
+  .addEventListener("click", () => getCountriesByRegion("Europe"));
+document
+  .getElementById("Africa")
+  .addEventListener("click", () => getCountriesByRegion("Africa"));
+document
+  .getElementById("Americas")
+  .addEventListener("click", () => getCountriesByRegion("Americas"));
+document
+  .getElementById("Oceania")
+  .addEventListener("click", () => getCountriesByRegion("Oceania"));
+
 async function getData(countryCode) {
   const data = await axios.get(
     CORSapi + "http://corona-api.com/countries/" + countryCode
@@ -20,4 +34,5 @@ async function getCountriesByRegion(region) {
 }
 
 // getData("AF");
-getCountriesByRegion("Asia");
+// Asia Europe Africa Americas Oceania
+// getCountriesByRegion("Oceania");
