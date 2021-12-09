@@ -5,16 +5,16 @@ document
   .addEventListener("click", () => showRegionData("Asia"));
 document
   .getElementById("Europe")
-  .addEventListener("click", () => print("Europe"));
+  .addEventListener("click", () => showRegionData("Europe"));
 document
   .getElementById("Africa")
-  .addEventListener("click", () => print("Africa"));
+  .addEventListener("click", () => showRegionData("Africa"));
 document
   .getElementById("Americas")
-  .addEventListener("click", () => print("Americas"));
+  .addEventListener("click", () => showRegionData("Americas"));
 document
   .getElementById("Oceania")
-  .addEventListener("click", () => print("Oceania"));
+  .addEventListener("click", () => showRegionData("Oceania"));
 
 const countriesList = {};
 
@@ -40,19 +40,33 @@ createCountriesListObject();
 // TODO create country dropdown func
 
 async function getData(countryCode) {
-  //gets country code, returns deathRate, confirmed, critical, deaths, recovered
-  const data = await axios.get(
-    CORSapi + "http://corona-api.com/countries/" + countryCode
-  );
-  return data.data.data.latest_data;
+  //gets country code, returns {deaths: , confirmed: , recovered: , critical: }
+  try {
+    const data = await axios.get(
+      CORSapi + "http://corona-api.com/countries/" + countryCode
+    );
+    const path = data.data.data.latest_data;
+    return {
+      countryName: data.data.data.name,
+      confirmed: path.confirmed,
+      critical: path.critical,
+      deaths: path.deaths,
+      recovered: path.recovered,
+    };
+    // TODO If zero confirmed cases, return null
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 async function showRegionData(region) {
-  console.log(`countriesList[region] is ${countriesList[region]}`);
+  const promises = [];
   for (let i = 0; i < countriesList[region].length; i++) {
     //TODO store this data in an object for all region's countries?
     // or each country with its own data?
     // TODO store in local storage unless it's already there
-    console.log(await getData(countriesList[region][i]));
+    promises.push(await getData(countriesList[region][i]));
   }
+  const response = await Promise.all([promises]);
+  console.log(response);
 }
