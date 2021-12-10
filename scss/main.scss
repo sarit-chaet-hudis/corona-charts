@@ -7,15 +7,23 @@ body {
   font-size: 1rem;
 }
 
+div {
+  margin: 10px;
+}
+
+h1 {
+  margin: 10px;
+}
 h3 {
   font-weight: 400;
+  margin: 10px;
 }
 
 button {
   display: inline;
   background-color: #ccc;
   font-weight: 400;
-
+  font-size: small;
   border-radius: 15px;
   padding: 5px 10px;
   border: none;
@@ -23,9 +31,20 @@ button {
   &:hover {
     background-color: darkgray;
   }
+  &:disabled {
+    color: darkgray;
+    &:hover {
+      background-color: #ccc;
+      cursor: unset;
+    }
+  }
 }
 
 #canvasContainer {
   position: relative;
   width: 90%;
+}
+
+.datasetTypeButtons {
+  display: none;
 }

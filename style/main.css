@@ -6,20 +6,36 @@ body {
   color: dodgerblue;
   font-size: 1rem; }
 
+div {
+  margin: 10px; }
+
+h1 {
+  margin: 10px; }
+
 h3 {
-  font-weight: 400; }
+  font-weight: 400;
+  margin: 10px; }
 
 button {
   display: inline;
   background-color: #ccc;
   font-weight: 400;
+  font-size: small;
   border-radius: 15px;
   padding: 5px 10px;
   border: none;
   cursor: pointer; }
   button:hover {
     background-color: darkgray; }
+  button:disabled {
+    color: darkgray; }
+    button:disabled:hover {
+      background-color: #ccc;
+      cursor: unset; }
 
 #canvasContainer {
   position: relative;
   width: 90%; }
+
+.datasetTypeButtons {
+  display: none; }

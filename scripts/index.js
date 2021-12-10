@@ -1,30 +1,35 @@
 const CORSapi = "https://intense-mesa-62220.herokuapp.com/";
 
-document.getElementById("Asia").addEventListener("click", () =>
-  createCountriesListObject()
-    .then(() => getRegionData("Asia"))
-    .then(() => drawChart("Asia"))
-);
-document.getElementById("Europe").addEventListener("click", () =>
-  createCountriesListObject()
-    .then(() => getRegionData("Europe"))
-    .then(() => drawChart("Europe"))
-);
-document.getElementById("Africa").addEventListener("click", () =>
-  createCountriesListObject()
-    .then(() => getRegionData("Africa"))
-    .then(() => drawChart("Africa"))
-);
-document.getElementById("Americas").addEventListener("click", () =>
-  createCountriesListObject()
-    .then(() => getRegionData("Americas"))
-    .then(() => drawChart("Americas"))
-);
-document.getElementById("Oceania").addEventListener("click", () =>
-  createCountriesListObject()
-    .then(() => getRegionData("Oceania"))
-    .then(() => drawChart("Oceania"))
-);
+document.getElementById("Asia").addEventListener("click", async () => {
+  await createCountriesListObject();
+  await getRegionData("Asia");
+  arrangeDataForChart("Asia");
+  drawChart("Asia");
+});
+document.getElementById("Europe").addEventListener("click", async () => {
+  await createCountriesListObject();
+  await getRegionData("Europe");
+  arrangeDataForChart("Europe");
+  drawChart("Europe");
+});
+document.getElementById("Africa").addEventListener("click", async () => {
+  await createCountriesListObject();
+  await getRegionData("Africa");
+  arrangeDataForChart("Africa");
+  drawChart("Africa");
+});
+document.getElementById("Americas").addEventListener("click", async () => {
+  await createCountriesListObject();
+  await getRegionData("Americas");
+  arrangeDataForChart("Americas");
+  drawChart("Americas");
+});
+document.getElementById("Oceania").addEventListener("click", async () => {
+  await createCountriesListObject();
+  await getRegionData("Oceania");
+  arrangeDataForChart("Oceania");
+  drawChart("Oceania");
+});
 
 const countriesList = {};
 
@@ -79,17 +84,12 @@ async function getRegionData(region) {
   const response = await Promise.all(promises);
 
   regionData[region] = response;
-  //   console.log(regionData[region], "inside getRegionData");
 }
 
 const canvasCtx = document.getElementById("myChart").getContext("2d");
 
-let labels = [];
-//x-axis labels
-
 let chartData = {
-  labels,
-  //datapoints
+  labels: [],
   datasets: [],
 };
 
@@ -102,18 +102,17 @@ const config = {
 };
 
 let myChart;
-//= new Chart(canvasCtx, config);
 
-function drawChart(region, datasetName = "confirmed") {
-  // gets region data, creates datatsets (confirmed, critical etc.) and makes chart
-  if (myChart) myChart.destroy(); // if has stuff, delete content
-  let names = [];
+const dataForCharts = {};
+
+function arrangeDataForChart(region) {
+  //gets name of region, creates arrays of data from raw data to display in chart
+  let names = []; // Stores Human readable country names
   const confirmed = [];
   const critical = [];
   const deaths = [];
   const recovered = [];
 
-  // TODO If zero confirmed cases, return null ?
   regionData[region].forEach((el) => {
     if (el) {
       names.push(el.data.data.name);
@@ -123,15 +122,24 @@ function drawChart(region, datasetName = "confirmed") {
       recovered.push(el.data.data.latest_data.recovered);
     }
   });
-  //console.log(`confirmed is: ${confirmed}`);
-  const newData = [{ data: confirmed, label: "confirmed 4eva" }];
-  chartData.datasets = newData;
-  // chartData.datasets[0].data = confirmed;
   names = Object.values(names);
-  chartData.labels = names;
-  //chartData.datasets[0].label = names;
-  //console.dir(`chartData is ${chartData.datasets}`);
-  console.log("labels is ", labels);
+  dataForCharts[region] = { names, confirmed, critical, deaths, recovered };
+}
+
+function drawChart(region, datasetName = "confirmed") {
+  // gets region, datatsetName (confirmed, critical etc.) and makes chart
+
+  if (myChart) myChart.destroy(); // if has stuff, delete content
+
+  // TODO If zero confirmed cases, return null ?
+
+  const newData = [
+    { data: dataForCharts[region][datasetName], label: datasetName },
+  ];
+  console.log(
+    `dataForCharts[region].datasetName is: ${dataForCharts[region][datasetName]}`
+  );
+  chartData.datasets = newData;
+  chartData.labels = dataForCharts[region].names;
   myChart = new Chart(canvasCtx, config);
-  //myChart.update();
 }
