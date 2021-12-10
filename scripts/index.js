@@ -36,11 +36,7 @@ const countriesList = {};
 const regionList = ["Asia", "Europe", "Africa", "Americas", "Oceania"];
 
 async function createCountriesListObject() {
-  if (countriesList === {}) {
-    //TODO not working?
-    resolve();
-    console.log("already got countries");
-  } else {
+  if (Object.keys(countriesList).length === 0) {
     // Runs on region list and creates an object that holds arrays of countries per region.
     for (region of regionList) {
       const countriesArr = [];
@@ -54,8 +50,6 @@ async function createCountriesListObject() {
     }
   }
 }
-
-createCountriesListObject();
 
 // TODO create country dropdown func
 
@@ -79,6 +73,8 @@ async function getRegionData(region) {
 
   const promises = [];
   for (let i = 0; i < countriesList[region].length; i++) {
+    // TODO If zero confirmed cases, return null / skip country..?
+
     promises.push(getCountryData(countriesList[region][i]));
   }
   const response = await Promise.all(promises);
@@ -99,6 +95,14 @@ const config = {
   options: {
     responsive: true,
   },
+  //   #158f04
+  // #a4af31
+  // #ffce7a
+  // #f18956
+  // #d43d51
+  // #f18956
+  // #ffce7a
+  // #a4af31
 };
 
 let myChart;
@@ -126,8 +130,25 @@ function arrangeDataForChart(region) {
   dataForCharts[region] = { names, confirmed, critical, deaths, recovered };
 }
 
+function activateDatasetButtons() {
+  document.querySelector(".datasetTypeButtons").style.display = "block";
+  document
+    .getElementById("confirmed")
+    .addEventListener("click", () => drawChart("Asia", "confirmed"));
+  document
+    .getElementById("deaths")
+    .addEventListener("click", () => drawChart("Asia", "deaths"));
+  document
+    .getElementById("recovered")
+    .addEventListener("click", () => drawChart("Asia", "recovered"));
+  document
+    .getElementById("critical")
+    .addEventListener("click", () => drawChart("Asia", "critical"));
+}
+
 function drawChart(region, datasetName = "confirmed") {
   // gets region, datatsetName (confirmed, critical etc.) and makes chart
+  activateDatasetButtons();
 
   if (myChart) myChart.destroy(); // if has stuff, delete content
 
@@ -136,9 +157,7 @@ function drawChart(region, datasetName = "confirmed") {
   const newData = [
     { data: dataForCharts[region][datasetName], label: datasetName },
   ];
-  console.log(
-    `dataForCharts[region].datasetName is: ${dataForCharts[region][datasetName]}`
-  );
+
   chartData.datasets = newData;
   chartData.labels = dataForCharts[region].names;
   myChart = new Chart(canvasCtx, config);
