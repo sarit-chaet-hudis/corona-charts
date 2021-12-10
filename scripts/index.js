@@ -105,6 +105,8 @@ async function getRegionData(region) {
   const butts = document.querySelectorAll(".regionButtons button");
   butts.forEach((b) => b.classList.remove("selectedRegion"));
   document.getElementById(region).classList.add("selectedRegion");
+  const allButts = document.querySelectorAll("button");
+  allButts.forEach((b) => (b.disabled = true));
   const promises = [];
   for (let i = 0; i < countriesList[region].length; i++) {
     // TODO If zero confirmed cases, return null / skip country..?
@@ -151,12 +153,18 @@ function activateDatasetButtons() {
     .addEventListener("click", () => drawChart(selectedRegion, "recovered"));
   document
     .getElementById("critical")
-    .addEventListener("click", () => drawChart(e, selectedRegion));
+    .addEventListener("click", () => drawChart(selectedRegion, "critical"));
 }
 
 function drawChart(region, datasetName = "confirmed") {
   // gets region, datatsetName (confirmed, critical etc.) and makes chart
   activateDatasetButtons();
+  const butts = document.querySelectorAll(".datasetTypeButtons button");
+  butts.forEach((b) => b.classList.remove("selectedDatasetName"));
+  document.getElementById(datasetName).classList.add("selectedDatasetName");
+
+  const allButts = document.querySelectorAll("button");
+  allButts.forEach((b) => (b.disabled = false));
 
   if (myChart) myChart.destroy(); // if has stuff, delete content
 

@@ -38,12 +38,12 @@ button {
     }
   }
 
-  &.selectedRegion,
-  .selectedDatasetName {
-    background-color: #a4af31;
-  }
   &:hover {
     background-color: darkgray;
+  }
+  &.selectedRegion,
+  &.selectedDatasetName {
+    background-color: #a4af31;
   }
 }
 
