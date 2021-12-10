@@ -55,3 +55,14 @@ button {
 .datasetTypeButtons {
   display: none;
 }
+
+.countrySelect {
+  display: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+select {
+  font-size: small;
+}

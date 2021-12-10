@@ -16,6 +16,9 @@ const config = {
   type: "bar",
   data: chartData,
   options: {
+    animation: {
+      //TODO
+    },
     responsive: true,
     scales: {
       //TODO limit lenght of lables
@@ -29,9 +32,9 @@ const chartColors = [
   "#ffce7a",
   "#f18956",
   "#d43d51",
-  "#f18956",
-  "#ffce7a",
-  "#a4af31",
+  // "#f18956",
+  // "#ffce7a",
+  // "#a4af31",
 ];
 
 let myChart;
@@ -89,6 +92,8 @@ async function createCountriesListObject() {
 
 async function getCountryData(countryCode) {
   //gets country code, returns all data for that country
+  const allButts = document.querySelectorAll("button");
+  allButts.forEach((b) => (b.disabled = true));
   //TODO check if we already have that info
   try {
     const data = await axios.get(
@@ -105,8 +110,6 @@ async function getRegionData(region) {
   const butts = document.querySelectorAll(".regionButtons button");
   butts.forEach((b) => b.classList.remove("selectedRegion"));
   document.getElementById(region).classList.add("selectedRegion");
-  const allButts = document.querySelectorAll("button");
-  allButts.forEach((b) => (b.disabled = true));
   const promises = [];
   for (let i = 0; i < countriesList[region].length; i++) {
     // TODO If zero confirmed cases, return null / skip country..?
@@ -179,4 +182,17 @@ function drawChart(region, datasetName = "confirmed") {
   chartData.datasets = newData;
   chartData.labels = dataForCharts[region].names;
   myChart = new Chart(canvasCtx, config);
+
+  showCountryOptions(region);
+}
+
+function showCountryOptions(region) {
+  //document.querySelector(".countrySelect").style.display = "block";
+  const countryInRegion = document.getElementById("countryInRegion");
+  dataForCharts[region].names.forEach((country) => {
+    const opt = document.createElement("option");
+    opt.textContent = country;
+    opt.value = country;
+    countryInRegion.appendChild(opt);
+  });
 }
