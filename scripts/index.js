@@ -17,16 +17,22 @@ const config = {
   data: chartData,
   options: {
     responsive: true,
+    scales: {
+      //TODO limit lenght of lables
+    },
   },
-  //   #158f04
-  // #a4af31
-  // #ffce7a
-  // #f18956
-  // #d43d51
-  // #f18956
-  // #ffce7a
-  // #a4af31
 };
+
+const chartColors = [
+  "#158f04",
+  "#a4af31",
+  "#ffce7a",
+  "#f18956",
+  "#d43d51",
+  "#f18956",
+  "#ffce7a",
+  "#a4af31",
+];
 
 let myChart;
 
@@ -145,7 +151,7 @@ function activateDatasetButtons() {
     .addEventListener("click", () => drawChart(selectedRegion, "recovered"));
   document
     .getElementById("critical")
-    .addEventListener("click", () => drawChart(selectedRegion, "critical"));
+    .addEventListener("click", () => drawChart(e, selectedRegion));
 }
 
 function drawChart(region, datasetName = "confirmed") {
@@ -154,10 +160,12 @@ function drawChart(region, datasetName = "confirmed") {
 
   if (myChart) myChart.destroy(); // if has stuff, delete content
 
-  // TODO If zero confirmed cases, return null ?
-  console.log(dataForCharts[region][datasetName]);
   const newData = [
-    { data: dataForCharts[region][datasetName], label: datasetName },
+    {
+      data: dataForCharts[region][datasetName],
+      label: datasetName,
+      backgroundColor: chartColors,
+    },
   ];
 
   chartData.datasets = newData;
