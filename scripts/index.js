@@ -55,13 +55,12 @@ createCountriesListObject();
 // TODO create country dropdown func
 
 async function getCountryData(countryCode) {
-  //gets country code, returns {deaths: , confirmed: , recovered: , critical: }
+  //gets country code, returns all data for that country
   //TODO check if we already have that info
   try {
     const data = await axios.get(
       CORSapi + "http://corona-api.com/countries/" + countryCode
     );
-    const path = data.data.data.latest_data;
     return data;
   } catch (error) {
     console.log(error);
@@ -85,16 +84,13 @@ async function getRegionData(region) {
 
 const canvasCtx = document.getElementById("myChart").getContext("2d");
 
-let labels = [
-  //x-axis labels
-  "hi",
-  "there",
-];
+let labels = [];
+//x-axis labels
 
 let chartData = {
   labels,
   //datapoints
-  datasets: [{ data: [13, 25], label: "confirmed cases" }],
+  datasets: [],
 };
 
 const config = {
@@ -105,11 +101,13 @@ const config = {
   },
 };
 
-let myChart = new Chart(canvasCtx, config);
+let myChart;
+//= new Chart(canvasCtx, config);
 
 function drawChart(region, datasetName = "confirmed") {
+  // gets region data, creates datatsets (confirmed, critical etc.) and makes chart
   if (myChart) myChart.destroy(); // if has stuff, delete content
-  const names = [];
+  let names = [];
   const confirmed = [];
   const critical = [];
   const deaths = [];
@@ -117,16 +115,23 @@ function drawChart(region, datasetName = "confirmed") {
 
   // TODO If zero confirmed cases, return null ?
   regionData[region].forEach((el) => {
-    console.log(el);
-    names.push(el.data.data.name);
-    confirmed.push(el.data.data.latest_data.confirmed);
-    critical.push(el.data.data.latest_data.critical);
-    deaths.push(el.data.data.latest_data.deaths);
-    recovered.push(el.data.data.latest_data.recovered);
+    if (el) {
+      names.push(el.data.data.name);
+      confirmed.push(el.data.data.latest_data.confirmed);
+      critical.push(el.data.data.latest_data.critical);
+      deaths.push(el.data.data.latest_data.deaths);
+      recovered.push(el.data.data.latest_data.recovered);
+    }
   });
-
-  chartData.datasets[0].data = confirmed;
-  labels = names;
+  //console.log(`confirmed is: ${confirmed}`);
+  const newData = [{ data: confirmed, label: "confirmed 4eva" }];
+  chartData.datasets = newData;
+  // chartData.datasets[0].data = confirmed;
+  names = Object.values(names);
+  chartData.labels = names;
+  //chartData.datasets[0].label = names;
+  //console.dir(`chartData is ${chartData.datasets}`);
   console.log("labels is ", labels);
   myChart = new Chart(canvasCtx, config);
+  //myChart.update();
 }
