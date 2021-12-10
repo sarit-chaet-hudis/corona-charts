@@ -28,6 +28,11 @@ button {
   padding: 5px 10px;
   border: none;
   cursor: pointer;
+
+  &.selectedRegion,
+  .selectedDatasetName {
+    background-color: #a4af31;
+  }
   &:hover {
     background-color: darkgray;
   }

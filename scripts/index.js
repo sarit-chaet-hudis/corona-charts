@@ -1,5 +1,37 @@
 const CORSapi = "https://intense-mesa-62220.herokuapp.com/";
 
+const countriesList = {};
+const regionList = ["Asia", "Europe", "Africa", "Americas", "Oceania"];
+
+const regionData = {};
+
+const canvasCtx = document.getElementById("myChart").getContext("2d");
+
+let chartData = {
+  labels: [],
+  datasets: [],
+};
+
+const config = {
+  type: "bar",
+  data: chartData,
+  options: {
+    responsive: true,
+  },
+  //   #158f04
+  // #a4af31
+  // #ffce7a
+  // #f18956
+  // #d43d51
+  // #f18956
+  // #ffce7a
+  // #a4af31
+};
+
+let myChart;
+
+const dataForCharts = {};
+
 document.getElementById("Asia").addEventListener("click", async () => {
   await createCountriesListObject();
   await getRegionData("Asia");
@@ -30,10 +62,6 @@ document.getElementById("Oceania").addEventListener("click", async () => {
   arrangeDataForChart("Oceania");
   drawChart("Oceania");
 });
-
-const countriesList = {};
-
-const regionList = ["Asia", "Europe", "Africa", "Americas", "Oceania"];
 
 async function createCountriesListObject() {
   if (Object.keys(countriesList).length === 0) {
@@ -66,11 +94,11 @@ async function getCountryData(countryCode) {
   }
 }
 
-const regionData = {};
-
 async function getRegionData(region) {
   //TODO check if we already have that info
-
+  const butts = document.querySelectorAll(".regionButtons button");
+  butts.forEach((b) => b.classList.remove("selectedRegion"));
+  document.getElementById(region).classList.add("selectedRegion");
   const promises = [];
   for (let i = 0; i < countriesList[region].length; i++) {
     // TODO If zero confirmed cases, return null / skip country..?
@@ -81,33 +109,6 @@ async function getRegionData(region) {
 
   regionData[region] = response;
 }
-
-const canvasCtx = document.getElementById("myChart").getContext("2d");
-
-let chartData = {
-  labels: [],
-  datasets: [],
-};
-
-const config = {
-  type: "bar",
-  data: chartData,
-  options: {
-    responsive: true,
-  },
-  //   #158f04
-  // #a4af31
-  // #ffce7a
-  // #f18956
-  // #d43d51
-  // #f18956
-  // #ffce7a
-  // #a4af31
-};
-
-let myChart;
-
-const dataForCharts = {};
 
 function arrangeDataForChart(region) {
   //gets name of region, creates arrays of data from raw data to display in chart
@@ -132,18 +133,19 @@ function arrangeDataForChart(region) {
 
 function activateDatasetButtons() {
   document.querySelector(".datasetTypeButtons").style.display = "block";
+  const selectedRegion = document.querySelector(".selectedRegion").id;
   document
     .getElementById("confirmed")
-    .addEventListener("click", () => drawChart("Asia", "confirmed"));
+    .addEventListener("click", () => drawChart(selectedRegion, "confirmed"));
   document
     .getElementById("deaths")
-    .addEventListener("click", () => drawChart("Asia", "deaths"));
+    .addEventListener("click", () => drawChart(selectedRegion, "deaths"));
   document
     .getElementById("recovered")
-    .addEventListener("click", () => drawChart("Asia", "recovered"));
+    .addEventListener("click", () => drawChart(selectedRegion, "recovered"));
   document
     .getElementById("critical")
-    .addEventListener("click", () => drawChart("Asia", "critical"));
+    .addEventListener("click", () => drawChart(selectedRegion, "critical"));
 }
 
 function drawChart(region, datasetName = "confirmed") {
@@ -153,7 +155,7 @@ function drawChart(region, datasetName = "confirmed") {
   if (myChart) myChart.destroy(); // if has stuff, delete content
 
   // TODO If zero confirmed cases, return null ?
-
+  console.log(dataForCharts[region][datasetName]);
   const newData = [
     { data: dataForCharts[region][datasetName], label: datasetName },
   ];

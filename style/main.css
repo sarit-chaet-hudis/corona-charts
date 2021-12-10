@@ -25,6 +25,9 @@ button {
   padding: 5px 10px;
   border: none;
   cursor: pointer; }
+  button.selectedRegion,
+  button .selectedDatasetName {
+    background-color: #a4af31; }
   button:hover {
     background-color: darkgray; }
   button:disabled {
