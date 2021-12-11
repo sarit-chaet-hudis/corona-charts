@@ -134,10 +134,10 @@ async function getCountryData(countryCode) {
 }
 
 async function getRegionData(region) {
+  const butts = document.querySelectorAll(".regionButtons button");
+  butts.forEach((b) => b.classList.remove("selectedRegion"));
+  document.getElementById(region).classList.add("selectedRegion");
   if (!regionData[region]) {
-    const butts = document.querySelectorAll(".regionButtons button");
-    butts.forEach((b) => b.classList.remove("selectedRegion"));
-    document.getElementById(region).classList.add("selectedRegion");
     const promises = [];
     for (let i = 0; i < countriesList[region].length; i++) {
       // TODO If zero confirmed cases, return null / skip country..?
@@ -242,7 +242,6 @@ function showCountryOptions(region) {
   countryInRegion.addEventListener("change", () =>
     showCountryStats(region, countryInRegion.value)
   );
-  countryInRegion.scrollIntoView();
 }
 
 function showCountryStats(region, selectedCountry) {
