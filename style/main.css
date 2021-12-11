@@ -57,7 +57,6 @@ button {
 
 .countrySelect {
   display: none;
-  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center; }
@@ -66,7 +65,8 @@ select {
   font-size: small;
   align-self: center;
   padding: 3px 7px;
-  border-radius: 3px; }
+  border-radius: 3px;
+  margin-bottom: 15px; }
 
 table {
   border-collapse: collapse;
@@ -76,6 +76,7 @@ table {
     font-weight: normal;
     padding: 7px; }
   table th {
+    font-weight: 500;
     background-color: #92b4f3; }
   table tr:nth-child(2n + 3) {
     background-color: #a4af3160; }

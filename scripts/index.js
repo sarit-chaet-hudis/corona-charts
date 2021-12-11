@@ -43,6 +43,11 @@ let myChart;
 
 const dataForCharts = {};
 
+const state = {
+  datasetButtonsVisible: false,
+  selectSingleCountryVisible: false,
+};
+
 document.getElementById("Asia").addEventListener("click", async () => {
   await createCountriesListObject();
   await getRegionData("Asia");
@@ -99,7 +104,6 @@ async function getCountryData(countryCode) {
   //gets country code, returns all data for that country
   const allButts = document.querySelectorAll("button");
   allButts.forEach((b) => (b.disabled = true));
-  //TODO check if we already have that info
   try {
     const data = await axios.get(
       CORSapi + "http://corona-api.com/countries/" + countryCode
@@ -173,7 +177,10 @@ function activateDatasetButtons() {
 
 function drawChart(region, datasetName = "confirmed") {
   // gets region, datatsetName (confirmed, critical etc.) and makes chart
-  activateDatasetButtons();
+  if (!state.datasetButtonsVisible) {
+    activateDatasetButtons();
+    state.datasetButtonsVisible = true;
+  }
   const butts = document.querySelectorAll(".datasetTypeButtons button");
   butts.forEach((b) => b.classList.remove("selectedDatasetName"));
   document.getElementById(datasetName).classList.add("selectedDatasetName");
@@ -199,8 +206,12 @@ function drawChart(region, datasetName = "confirmed") {
 }
 
 function showCountryOptions(region) {
-  document.querySelector(".countrySelect").style.display = "flex";
+  if (!state.selectSingleCountryVisible) {
+    document.querySelector(".countrySelect").style.display = "flex";
+    state.selectSingleCountryVisible = true;
+  }
   const countryInRegion = document.getElementById("countryInRegion");
+  countryInRegion.innerHTML = "";
   dataForCharts[region].names.forEach((country) => {
     const opt = document.createElement("option");
     opt.textContent = country;
