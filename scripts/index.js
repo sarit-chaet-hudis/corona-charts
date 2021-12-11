@@ -21,6 +21,15 @@ const config = {
     },
     responsive: true,
     scales: {
+      x: {
+        ticks: {
+          callback: function (value) {
+            return this.getLabelForValue(value).length > 12
+              ? this.getLabelForValue(value).substr(0, 11) + ".."
+              : this.getLabelForValue(value);
+          },
+        },
+      },
       //TODO limit lenght of lables
     },
   },
@@ -88,8 +97,6 @@ async function createCountriesListObject() {
   }
 }
 
-// TODO create country dropdown func
-
 async function getCountryData(countryCode) {
   //gets country code, returns all data for that country
   const allButts = document.querySelectorAll("button");
@@ -123,7 +130,7 @@ async function getRegionData(region) {
 
 function arrangeDataForChart(region) {
   //gets name of region, creates arrays of data from raw data to display in chart
-  let names = []; // Stores Human readable country names
+  let names = []; // Human readable country names
   const confirmed = [];
   const critical = [];
   const deaths = [];
@@ -187,7 +194,7 @@ function drawChart(region, datasetName = "confirmed") {
 }
 
 function showCountryOptions(region) {
-  //document.querySelector(".countrySelect").style.display = "block";
+  document.querySelector(".countrySelect").style.display = "block";
   const countryInRegion = document.getElementById("countryInRegion");
   dataForCharts[region].names.forEach((country) => {
     const opt = document.createElement("option");
@@ -195,4 +202,36 @@ function showCountryOptions(region) {
     opt.value = country;
     countryInRegion.appendChild(opt);
   });
+  countryInRegion.addEventListener("change", () =>
+    showCountryStats(region, countryInRegion.value)
+  );
+}
+
+function showCountryStats(region, selectedCountry) {
+  const countryStatsDiv = document.querySelector(".coutryStats");
+  const indexCountry = regionData[region].findIndex(
+    (d) => d.data.data.name === selectedCountry
+  );
+  const countryData = regionData[region][indexCountry].data.data;
+  //console.log(indexCountry);
+
+  const dataTable = document.createElement("table");
+  let tData = `<tr>
+      <th>${selectedCountry}</th><th>Last update: ${countryData.updated_at.slice(
+    0,
+    countryData.updated_at.indexOf("T")
+  )}</th>
+    </tr>
+    <tr><td>Population</td>  <td>${countryData.population.toLocaleString()}</td></tr>
+    <tr><td>Deaths</td>  <td>${countryData.latest_data.deaths.toLocaleString()}</td></tr>
+    <tr><td>Confirmed cases</td>  <td>${countryData.latest_data.confirmed.toLocaleString()}</td></tr>
+    <tr><td>Recovered</td>  <td>${countryData.latest_data.recovered.toLocaleString()}</td></tr>
+    <tr><td>In critical condition</td>  <td>${countryData.latest_data.critical.toLocaleString()}</td></tr>
+    <tr><td>Cases per million</td>  <td>${
+      countryData.latest_data.calculated.cases_per_million_population / 100
+    }%</td></tr>
+    `;
+  dataTable.innerHTML = tData;
+  countryStatsDiv.innerHTML = "";
+  countryStatsDiv.appendChild(dataTable);
 }
