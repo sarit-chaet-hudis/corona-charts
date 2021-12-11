@@ -1,15 +1,21 @@
 #landscapeMessage {
-  display: block; //TODO switch to none
+  display: none;
   position: absolute;
-  top: 0;
-  padding: 5px;
-  border: 1px solid #ccc;
-  background-color: rgba(255, 255, 255, 0.815);
+  padding: 10px 5px;
+  border: 1px solid #a4af31;
+  background-color: #d7e4488e;
   margin: auto;
   text-align: center;
-  //   transition: tranform 0.7s ease-in;
+  animation: slideDown 0.7s ease-in;
+}
 
-  //   transform: translateY();
+@keyframes slideDown {
+  from {
+    transform: translateY(-35px);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 @media only screen and (orientation: portrait) {
