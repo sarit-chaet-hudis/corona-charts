@@ -35,7 +35,22 @@
     #loader .dots .delay2 {
       animation-delay: 1s; }
 
+#landscapeMessage {
+  display: block;
+  position: absolute;
+  top: 0;
+  padding: 5px;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.815);
+  margin: auto;
+  text-align: center; }
+
+@media only screen and (orientation: portrait) {
+  #landscapeMessage {
+    display: block; } }
+
 body {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;

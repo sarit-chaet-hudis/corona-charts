@@ -1,6 +1,8 @@
 @import "loader";
+@import "mobile";
 
 body {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;

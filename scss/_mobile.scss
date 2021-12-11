@@ -1,0 +1,19 @@
+#landscapeMessage {
+  display: block; //TODO switch to none
+  position: absolute;
+  top: 0;
+  padding: 5px;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.815);
+  margin: auto;
+  text-align: center;
+  //   transition: tranform 0.7s ease-in;
+
+  //   transform: translateY();
+}
+
+@media only screen and (orientation: portrait) {
+  #landscapeMessage {
+    display: block;
+  }
+}
