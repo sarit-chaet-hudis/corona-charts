@@ -127,7 +127,12 @@ async function getCountryData(countryCode) {
     const data = await axios.get(
       CORSapi + "http://corona-api.com/countries/" + countryCode
     );
-    return data;
+    // Filter out countries that have 0 confirmed, only 5 in the world have no cases
+    //TODO add names of those countries so they pass the filter
+    // https://koryogroup.com/blog/are-there-countries-without-coronavirus
+    if (data.data.data.latest_data.confirmed > 0) {
+      return data;
+    }
   } catch (error) {
     console.log(error);
   }
@@ -140,20 +145,22 @@ async function getRegionData(region) {
   if (!regionData[region]) {
     const promises = [];
     for (let i = 0; i < countriesList[region].length; i++) {
-      // TODO If zero confirmed cases, return null / skip country..?
-
       promises.push(getCountryData(countriesList[region][i]));
     }
-    const response = await Promise.all(promises);
-
-    regionData[region] = response;
+    regionData[region] = await Promise.all(promises);
+    // Now remove all undefined
+    Object.keys(regionData[region]).forEach((key) =>
+      regionData[region][key] === undefined
+        ? delete regionData[region][key]
+        : {}
+    );
   } else {
     console.log(`we already got region data for ${region}`);
   }
 }
 
 function arrangeDataForChart(region) {
-  // if (!dataForCharts[region]) { //TODO
+  // if (!dataForCharts[region]) no need to arrange again.. { //TODO
   //gets name of region, creates arrays of data from raw data to display in chart
   let names = []; // Human readable country names
   const confirmed = [];
@@ -248,11 +255,11 @@ function showCountryStats(region, selectedCountry) {
   // Shows specific stats of selected country in table form
   const countryStatsDiv = document.querySelector(".coutryStats");
   try {
-    const indexCountry = regionData[region].findIndex(
-      (d) => d.data.data.name === selectedCountry
-    );
-    const countryData = regionData[region][indexCountry].data.data;
-    //console.log(indexCountry);
+    for (c in regionData[region]) {
+      if (regionData[region][c].data.data.name === selectedCountry) {
+        countryData = regionData[region][c].data.data;
+      }
+    }
 
     const dataTable = document.createElement("table");
     let tData = `<tr>
