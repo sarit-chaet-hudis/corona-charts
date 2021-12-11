@@ -46,6 +46,7 @@ const dataForCharts = {};
 const state = {
   datasetButtonsVisible: false,
   selectSingleCountryVisible: false,
+  loading: false,
 };
 
 document.getElementById("Asia").addEventListener("click", async () => {
@@ -80,6 +81,9 @@ document.getElementById("Oceania").addEventListener("click", async () => {
 });
 
 async function createCountriesListObject() {
+  if (!state.loading) {
+    toggleLoading();
+  }
   if (Object.keys(countriesList).length === 0) {
     //checks if countriesList isnt availabe in global var
     // Runs on region list and creates an object that holds arrays of countries per region.
@@ -100,10 +104,22 @@ async function createCountriesListObject() {
   }
 }
 
+function toggleLoading() {
+  state.loading = !state.loading;
+  if (state.loading) {
+    const allButts = document.querySelectorAll("button");
+    allButts.forEach((b) => (b.disabled = true));
+    document.getElementById("loader").style.display = "flex";
+  } else {
+    const allButts = document.querySelectorAll("button");
+    allButts.forEach((b) => (b.disabled = false));
+    document.getElementById("loader").style.display = "none";
+  }
+}
+
 async function getCountryData(countryCode) {
   //gets country code, returns all data for that country
-  const allButts = document.querySelectorAll("button");
-  allButts.forEach((b) => (b.disabled = true));
+
   try {
     const data = await axios.get(
       CORSapi + "http://corona-api.com/countries/" + countryCode
@@ -159,7 +175,6 @@ function arrangeDataForChart(region) {
 }
 
 function activateDatasetButtons() {
-  document.querySelector(".datasetTypeButtons").style.display = "block";
   const selectedRegion = document.querySelector(".selectedRegion").id;
   document
     .getElementById("confirmed")
@@ -176,17 +191,19 @@ function activateDatasetButtons() {
 }
 
 function drawChart(region, datasetName = "confirmed") {
+  console.log(`in drawChart, region is${region}`);
+  if (state.loading) {
+    toggleLoading();
+  }
   // gets region, datatsetName (confirmed, critical etc.) and makes chart
   if (!state.datasetButtonsVisible) {
-    activateDatasetButtons();
+    document.querySelector(".datasetTypeButtons").style.display = "block";
     state.datasetButtonsVisible = true;
   }
+  activateDatasetButtons();
   const butts = document.querySelectorAll(".datasetTypeButtons button");
   butts.forEach((b) => b.classList.remove("selectedDatasetName"));
   document.getElementById(datasetName).classList.add("selectedDatasetName");
-
-  const allButts = document.querySelectorAll("button");
-  allButts.forEach((b) => (b.disabled = false));
 
   if (myChart) myChart.destroy(); // if has stuff, delete content
 
@@ -206,6 +223,7 @@ function drawChart(region, datasetName = "confirmed") {
 }
 
 function showCountryOptions(region) {
+  console.log(`in showCountryOptions, region is ${region}`);
   if (!state.selectSingleCountryVisible) {
     document.querySelector(".countrySelect").style.display = "flex";
     state.selectSingleCountryVisible = true;
@@ -225,18 +243,19 @@ function showCountryOptions(region) {
 
 function showCountryStats(region, selectedCountry) {
   const countryStatsDiv = document.querySelector(".coutryStats");
-  const indexCountry = regionData[region].findIndex(
-    (d) => d.data.data.name === selectedCountry
-  );
-  const countryData = regionData[region][indexCountry].data.data;
-  //console.log(indexCountry);
+  try {
+    const indexCountry = regionData[region].findIndex(
+      (d) => d.data.data.name === selectedCountry
+    );
+    const countryData = regionData[region][indexCountry].data.data;
+    //console.log(indexCountry);
 
-  const dataTable = document.createElement("table");
-  let tData = `<tr>
+    const dataTable = document.createElement("table");
+    let tData = `<tr>
       <th>${selectedCountry}</th><th>Last update: ${countryData.updated_at.slice(
-    0,
-    countryData.updated_at.indexOf("T")
-  )}</th>
+      0,
+      countryData.updated_at.indexOf("T")
+    )}</th>
     </tr>
     <tr><td>Population</td>  <td>${countryData.population.toLocaleString()}</td></tr>
     <tr><td>Deaths</td>  <td>${countryData.latest_data.deaths.toLocaleString()}</td></tr>
@@ -247,7 +266,10 @@ function showCountryStats(region, selectedCountry) {
       countryData.latest_data.calculated.cases_per_million_population / 100
     }%</td></tr>
     `;
-  dataTable.innerHTML = tData;
-  countryStatsDiv.innerHTML = "";
-  countryStatsDiv.appendChild(dataTable);
+    dataTable.innerHTML = tData;
+    countryStatsDiv.innerHTML = "";
+    countryStatsDiv.appendChild(dataTable);
+  } catch {
+    console.log("cant find country, try different");
+  }
 }

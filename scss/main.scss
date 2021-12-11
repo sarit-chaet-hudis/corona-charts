@@ -1,16 +1,17 @@
+@import "loader";
+
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  //   font-family: "Open Sans", sans-serif;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
   font-size: 1rem;
 }
 
-div {
-  margin: 10px;
-}
+// div {
+//   margin: 10px;
+// }
 
 h1 {
   color: dodgerblue;
@@ -34,6 +35,11 @@ a,
 a:visited {
   text-decoration: none;
   color: #333;
+}
+
+.regionButtons,
+.datasetTypeButtons {
+  margin: 10px;
 }
 
 button {
@@ -101,6 +107,5 @@ table {
   }
   tr:nth-child(2n + 3) {
     background-color: #a4af3160;
-    // background-color: rgba(146, 180, 243, 0.472);
   }
 }

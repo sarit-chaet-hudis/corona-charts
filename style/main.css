@@ -1,3 +1,40 @@
+#loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.623);
+  z-index: 30;
+  display: none;
+  flex-direction: column;
+  text-align: center; }
+  #loader .dots {
+    display: flex;
+    justify-content: center; }
+    #loader .dots .dot {
+      width: 10px;
+      height: 30px;
+      margin: 20px 3px 0; }
+      #loader .dots .dot1 {
+        background-color: #f18956; }
+      #loader .dots .dot2 {
+        background-color: #ffce7a; }
+      #loader .dots .dot3 {
+        background-color: #a4af31; }
+    #loader .dots .stretch {
+      animation: 1s ease-in-out infinite alternate stretch; }
+
+@keyframes stretch {
+  from {
+    transform: scaleY(100%); }
+  to {
+    transform: scaleY(50%); } }
+    #loader .dots .delay1 {
+      animation-delay: 0.5s; }
+    #loader .dots .delay2 {
+      animation-delay: 1s; }
+
 body {
   display: flex;
   flex-direction: column;
@@ -5,9 +42,6 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
   font-size: 1rem; }
-
-div {
-  margin: 10px; }
 
 h1 {
   color: dodgerblue;
@@ -28,6 +62,10 @@ a,
 a:visited {
   text-decoration: none;
   color: #333; }
+
+.regionButtons,
+.datasetTypeButtons {
+  margin: 10px; }
 
 button {
   display: inline;

@@ -1,0 +1,61 @@
+#loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.623);
+  z-index: 30;
+  display: none;
+  flex-direction: column;
+  text-align: center;
+
+  .dots {
+    display: flex;
+    justify-content: center;
+    .dot {
+      width: 10px;
+      height: 30px;
+      margin: 20px 3px 0;
+
+      &1 {
+        background-color: #f18956;
+      }
+      &2 {
+        background-color: #ffce7a;
+      }
+      &3 {
+        background-color: #a4af31;
+      }
+    }
+
+    .stretch {
+      animation: 1s ease-in-out infinite alternate stretch;
+    }
+
+    @keyframes stretch {
+      from {
+        transform: scaleY(100%);
+      }
+      to {
+        transform: scaleY(50%);
+      }
+    }
+
+    .delay1 {
+      animation-delay: 0.5s;
+    }
+
+    .delay2 {
+      animation-delay: 1s;
+    }
+
+    // .dot.stretch.delay1 {
+    //   left: 10px;
+    // }
+
+    // .dot.stretch.delay2 {
+    //   left: 20px;
+    // }
+  }
+}
