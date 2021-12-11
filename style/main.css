@@ -4,7 +4,7 @@ body {
   align-items: center;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
-  font-size: 0.8rem; }
+  font-size: 1rem; }
 
 div {
   margin: 10px; }
@@ -64,14 +64,17 @@ button {
 
 select {
   font-size: small;
-  align-self: center; }
+  align-self: center;
+  padding: 3px 7px;
+  border-radius: 3px; }
 
 table {
   border-collapse: collapse;
   text-align: left; }
   table th,
   table td {
-    padding: 5px; }
+    font-weight: normal;
+    padding: 7px; }
   table th {
     background-color: #92b4f3; }
   table tr:nth-child(2n + 3) {
