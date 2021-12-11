@@ -194,7 +194,7 @@ function drawChart(region, datasetName = "confirmed") {
 }
 
 function showCountryOptions(region) {
-  document.querySelector(".countrySelect").style.display = "block";
+  document.querySelector(".countrySelect").style.display = "flex";
   const countryInRegion = document.getElementById("countryInRegion");
   dataForCharts[region].names.forEach((country) => {
     const opt = document.createElement("option");
