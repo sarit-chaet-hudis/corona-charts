@@ -108,7 +108,8 @@ select {
 
 table {
   border-collapse: collapse;
-  text-align: left; }
+  text-align: left;
+  margin-bottom: 25px; }
   table th,
   table td {
     font-weight: normal;

@@ -84,6 +84,9 @@ async function createCountriesListObject() {
   if (!state.loading) {
     toggleLoading();
   }
+  const countryStatsDiv = document.querySelector(".coutryStats");
+  countryStatsDiv.innerHTML = "";
+
   if (Object.keys(countriesList).length === 0) {
     //checks if countriesList isnt availabe in global var
     // Runs on region list and creates an object that holds arrays of countries per region.
@@ -191,11 +194,10 @@ function activateDatasetButtons() {
 }
 
 function drawChart(region, datasetName = "confirmed") {
-  console.log(`in drawChart, region is${region}`);
+  // gets region, datatsetName (confirmed, critical etc.) and makes chart
   if (state.loading) {
     toggleLoading();
   }
-  // gets region, datatsetName (confirmed, critical etc.) and makes chart
   if (!state.datasetButtonsVisible) {
     document.querySelector(".datasetTypeButtons").style.display = "block";
     state.datasetButtonsVisible = true;
@@ -223,7 +225,8 @@ function drawChart(region, datasetName = "confirmed") {
 }
 
 function showCountryOptions(region) {
-  console.log(`in showCountryOptions, region is ${region}`);
+  // Fills the dropdown with country options to select from that region
+  // and adds relevant event listeners to show country stats
   if (!state.selectSingleCountryVisible) {
     document.querySelector(".countrySelect").style.display = "flex";
     state.selectSingleCountryVisible = true;
@@ -239,9 +242,11 @@ function showCountryOptions(region) {
   countryInRegion.addEventListener("change", () =>
     showCountryStats(region, countryInRegion.value)
   );
+  countryInRegion.scrollIntoView();
 }
 
 function showCountryStats(region, selectedCountry) {
+  // Shows specific stats of selected country in table form
   const countryStatsDiv = document.querySelector(".coutryStats");
   try {
     const indexCountry = regionData[region].findIndex(
@@ -269,6 +274,7 @@ function showCountryStats(region, selectedCountry) {
     dataTable.innerHTML = tData;
     countryStatsDiv.innerHTML = "";
     countryStatsDiv.appendChild(dataTable);
+    countryStatsDiv.scrollIntoView();
   } catch {
     console.log("cant find country, try different");
   }
