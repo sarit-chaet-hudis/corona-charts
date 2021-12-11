@@ -16,8 +16,10 @@ const config = {
   type: "bar",
   data: chartData,
   options: {
-    animation: {
-      //TODO
+    plugins: {
+      legend: {
+        display: false,
+      },
     },
     responsive: true,
     scales: {
@@ -35,16 +37,7 @@ const config = {
   },
 };
 
-const chartColors = [
-  "#158f04",
-  "#a4af31",
-  "#ffce7a",
-  "#f18956",
-  "#d43d51",
-  // "#f18956",
-  // "#ffce7a",
-  // "#a4af31",
-];
+const chartColors = ["#158f04", "#a4af31", "#ffce7a", "#f18956", "#d43d51"];
 
 let myChart;
 
@@ -83,6 +76,7 @@ document.getElementById("Oceania").addEventListener("click", async () => {
 
 async function createCountriesListObject() {
   if (Object.keys(countriesList).length === 0) {
+    //checks if countriesList isnt availabe in global var
     // Runs on region list and creates an object that holds arrays of countries per region.
     for (region of regionList) {
       const countriesArr = [];
@@ -93,6 +87,10 @@ async function createCountriesListObject() {
         countriesArr.push(countries.data[i].cca2);
       }
       countriesList[region] = countriesArr;
+      localStorage.setItem(
+        `countriesList[${region}]`,
+        JSON.stringify(countriesArr)
+      );
     }
   }
 }
@@ -113,22 +111,26 @@ async function getCountryData(countryCode) {
 }
 
 async function getRegionData(region) {
-  //TODO check if we already have that info
-  const butts = document.querySelectorAll(".regionButtons button");
-  butts.forEach((b) => b.classList.remove("selectedRegion"));
-  document.getElementById(region).classList.add("selectedRegion");
-  const promises = [];
-  for (let i = 0; i < countriesList[region].length; i++) {
-    // TODO If zero confirmed cases, return null / skip country..?
+  if (!regionData[region]) {
+    const butts = document.querySelectorAll(".regionButtons button");
+    butts.forEach((b) => b.classList.remove("selectedRegion"));
+    document.getElementById(region).classList.add("selectedRegion");
+    const promises = [];
+    for (let i = 0; i < countriesList[region].length; i++) {
+      // TODO If zero confirmed cases, return null / skip country..?
 
-    promises.push(getCountryData(countriesList[region][i]));
+      promises.push(getCountryData(countriesList[region][i]));
+    }
+    const response = await Promise.all(promises);
+
+    regionData[region] = response;
+  } else {
+    console.log(`we already got region data for ${region}`);
   }
-  const response = await Promise.all(promises);
-
-  regionData[region] = response;
 }
 
 function arrangeDataForChart(region) {
+  // if (!dataForCharts[region]) { //TODO
   //gets name of region, creates arrays of data from raw data to display in chart
   let names = []; // Human readable country names
   const confirmed = [];
@@ -147,6 +149,9 @@ function arrangeDataForChart(region) {
   });
   names = Object.values(names);
   dataForCharts[region] = { names, confirmed, critical, deaths, recovered };
+  // } else {
+  //   console.log(`dataForCharts${[region]} already exists`);
+  // }
 }
 
 function activateDatasetButtons() {
