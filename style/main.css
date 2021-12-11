@@ -10,13 +10,12 @@ div {
   margin: 10px; }
 
 h1 {
-  color: #158f04;
+  color: dodgerblue;
   margin: 20px 0 0; }
 
 h3 {
   color: #158f04;
-  color: #a4af31;
-  font-weight: 600;
+  font-weight: 500;
   margin: 10px; }
 
 .small {
@@ -47,7 +46,7 @@ button {
   button:hover {
     background-color: darkgray; }
   button.selectedRegion, button.selectedDatasetName {
-    background-color: #a4af31; }
+    background-color: #92b4f3; }
 
 #canvasContainer {
   position: relative;
@@ -74,6 +73,6 @@ table {
   table td {
     padding: 5px; }
   table th {
-    background-color: #148f04af; }
+    background-color: #92b4f3; }
   table tr:nth-child(2n + 3) {
-    background-color: #a4af318a; }
+    background-color: #a4af3160; }

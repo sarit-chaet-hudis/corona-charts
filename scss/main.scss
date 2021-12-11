@@ -13,13 +13,12 @@ div {
 }
 
 h1 {
-  color: #158f04;
+  color: dodgerblue;
   margin: 20px 0 0;
 }
 h3 {
   color: #158f04;
-  color: #a4af31;
-  font-weight: 600;
+  font-weight: 500;
   margin: 10px;
 }
 
@@ -60,7 +59,7 @@ button {
   }
   &.selectedRegion,
   &.selectedDatasetName {
-    background-color: #a4af31;
+    background-color: rgb(146, 180, 243);
   }
 }
 
@@ -94,9 +93,11 @@ table {
     padding: 5px;
   }
   th {
-    background-color: #148f04af;
+    //background-color: #148f04af;
+    background-color: rgb(146, 180, 243);
   }
   tr:nth-child(2n + 3) {
-    background-color: #a4af318a;
+    background-color: #a4af3160;
+    // background-color: rgba(146, 180, 243, 0.472);
   }
 }
